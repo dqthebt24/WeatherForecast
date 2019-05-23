@@ -34,15 +34,25 @@ appForecast.controller('forecastController', ['$scope', '$resource', 'cityServic
 	
 	 var weatherRequest = $resource("http://api.openweathermap.org/data/2.5/forecast?APPID=a4955935f395ef2bc00e8380a3c11c7f&lang=vi&units=metric&q=:ct&cnt=40",
 	 {ct: '@ct'});
-	 var result = weatherRequest.get({ct: $scope.city}).$promise.then(function(data){
+	 try{
+		var result = weatherRequest.get({ct: $scope.city}).$promise.then(function(data){
 		 
-		console.log(data);
+			console.log(data);
+			$scope.report = {
+				error: "",
+				total: data.cnt,
+				list: getDaysData(data.list)
+			}
+			console.log($scope.report.list);
+		 }); 
+	 }
+	 catch(e){
 		$scope.report = {
-			total: data.cnt,
-			list: getDaysData(data.list)
+			error: e,
+			total: 0,
+			list: []
 		}
-		console.log($scope.report.list);
-	 });
+	 }
 	 cityService.city = "";
 	 
 	 $scope.toDateTime = function(dt){
