@@ -48,7 +48,7 @@ appForecast.controller('forecastController', ['$scope', '$resource', 'cityServic
 	 $scope.toDateTime = function(dt){
 		 var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		 var date = new Date(dt*1000);
-		 return days[date.getDay()] + "-" + date.getDate() +"-" + date.getMonth() + "-" + date.getFullYear();
+		 return days[date.getDay()] + " " + date.getDate() +"-" + date.getMonth() + "-" + date.getFullYear();
 	 };
 	 
 
