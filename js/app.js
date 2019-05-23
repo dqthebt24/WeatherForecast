@@ -14,6 +14,11 @@ appForecast.config(function($routeProvider){
 	. when('/forecast',{
 		templateUrl: '../pages/forecast.html',
 		controller: 'forecastController'
+	})
+
+	. when('/forecast/:lang',{
+		templateUrl: '../pages/forecast.html',
+		controller: 'forecastController'
 	});
 });
 
@@ -22,20 +27,24 @@ appForecast.service('cityService', function() {
 });
 
 appForecast.controller('homepageController', ['$scope', 'cityService', function($scope, cityService){
-	$scope.city = cityService.city;
+	$scope.city = "";
     
     $scope.$watch('city', function(){
         cityService.city = $scope.city;
     });
 }]);
 
-appForecast.controller('forecastController', ['$scope', '$resource', 'cityService', function($scope, $resource, cityService){
-	$scope.city = cityService.city;
+appForecast.controller('forecastController', ['$scope', '$resource', '$routeParams', 'cityService', 
+	function($scope, $resource, $routeParams, cityService){
 	
-	 var weatherRequest = $resource("http://api.openweathermap.org/data/2.5/forecast?APPID=a4955935f395ef2bc00e8380a3c11c7f&lang=vi&units=metric&q=:ct&cnt=40",
-	 {ct: '@ct'});
+	$scope.lang = $routeParams.lang || "vi";
+	$scope.city = cityService.city;
+	console.log("LANG=" + $scope.lang + ";" + $scope.city);
+	 var weatherRequest = $resource("http://api.openweathermap.org/data/2.5/forecast?" + 
+	 	"APPID=a4955935f395ef2bc00e8380a3c11c7f&lang=:lang&units=metric&q=:ct&cnt=40",
+	 {ct: '@ct', lang: '@lang'});
 	 try{
-		var result = weatherRequest.get({ct: $scope.city}).$promise.then(function(data){
+		var result = weatherRequest.get({ct: $scope.city, lang:$scope.lang }).$promise.then(function(data){
 		 
 			console.log(data);
 			$scope.report = {
@@ -53,7 +62,6 @@ appForecast.controller('forecastController', ['$scope', '$resource', 'cityServic
 			list: []
 		}
 	 }
-	 cityService.city = "";
 	 
 	 $scope.toDateTime = function(dt){
 		 var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
