@@ -1,7 +1,7 @@
 City: {{ city }}
 <div ng-repeat="w in report.list">
 	<div class="panel panel-default">
-	    <div class="panel-heading">
+	    <div class="card-header">
 	        <h3 class="panel-title">{{ toDateTime(w.dt) | date: 'yyyy-MM-dd' }}</h3>
 	    </div>
 	    <div class="panel-body">
